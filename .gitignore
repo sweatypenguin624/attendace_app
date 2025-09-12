@@ -1,4 +1,5 @@
 backend/images
+backend/uploads
 static/ngrok_url.json
 static/uploads
 __pycache__/
