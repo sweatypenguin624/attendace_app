@@ -1,0 +1,10 @@
+authtoken: 2vkntqoiqXRT72E2fah2CHrfAQI_6PvXYWWYtaczkGgRZTERX
+
+tunnels:
+  flask1:
+    addr: 5008
+    proto: http
+
+  flask2:
+    addr: 5000
+    proto: http

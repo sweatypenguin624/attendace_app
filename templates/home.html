@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block title %}Attendance Portal - Face Recognition System{% endblock %}
+
+{% block extra_css %}
+<style>
+    .hero-section {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        min-height: calc(100vh - 80px);
+        padding: 2rem;
+    }
+
+    .main-title {
+        font-size: 4.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        letter-spacing: 2px;
+        background: linear-gradient(to right, #d1d5db, #ffffff, #d1d5db);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        text-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
+    }
+
+    .subtitle {
+        font-size: 1.5rem;
+        color: #d1d5db;
+        max-width: 600px;
+        margin: 0 auto 2rem;
+        line-height: 1.6;
+    }
+
+    .welcome-text {
+        font-size: 1.8rem;
+        color: #d1d5db;
+        margin-bottom: 2rem;
+    }
+
+    .btn-container {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1.5rem;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .btn {
+        padding: 0.9rem 2rem;
+        font-size: 1.1rem;
+        background-color: #ffffff;
+        color: #000000;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        font-family: "Jost", sans-serif;
+        font-weight: 600;
+        display: inline-block;
+    }
+
+    .btn:hover {
+        background-color: #e5e5e5;
+        transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+        background-color: rgba(255, 255, 255, 0.2);
+        color: #ffffff;
+    }
+
+    .btn-secondary:hover {
+        background-color: rgba(255, 255, 255, 0.3);
+    }
+
+    @media (max-width: 768px) {
+        .main-title {
+            font-size: 3.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+        }
+
+        .btn-container {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .btn {
+            width: 100%;
+            max-width: 250px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .main-title {
+            font-size: 2.5rem;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+        }
+
+        .welcome-text {
+            font-size: 1.4rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <h1 class="main-title">Attendance Portal</h1>
+    <p class="subtitle">Face recognition based attendance portal</p>
+
+    {% if current_user.is_authenticated %}
+    <p class="welcome-text">Hello, {{ current_user.username }}!</p>
+    <div class="btn-container">
+        <a href="{{ url_for('mark_attendance') }}" class="btn">Mark Attendance Today</a>
+        <a href="{{ url_for('logout') }}" class="btn btn-secondary">Logout</a>
+    </div>
+    {% else %}
+    <p class="welcome-text">Welcome to the Attendance Portal</p>
+    <div class="btn-container">
+        <a href="{{ url_for('login') }}" class="btn">Login</a>
+        <a href="{{ url_for('signup') }}" class="btn btn-secondary">Sign Up</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

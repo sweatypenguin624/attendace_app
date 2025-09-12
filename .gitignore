@@ -1,0 +1,6 @@
+backend/images
+static/ngrok_url.json
+static/uploads
+__pycache__/
+*.pyc
+instance/   

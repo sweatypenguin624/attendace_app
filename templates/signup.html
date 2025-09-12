@@ -1,0 +1,264 @@
+{% extends "base.html" %}
+
+{% block title %}Sign Up - Face Recognition System{% endblock %}
+
+{% block extra_css %}
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(135deg,
+                #000000 60%,
+                #1e3a8a 100%);
+        font-family: "Jost", sans-serif, Arial, Helvetica;
+        color: #ffffff;
+        padding: 20px 0;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        width: 100%;
+    }
+
+    h1.title {
+        font-size: 3.5rem;
+        font-weight: 600;
+        margin-bottom: 20px;
+        letter-spacing: 1px;
+        background: linear-gradient(to right, #6b7280, #d1d5db);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    .card {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        max-width: 500px;
+        width: 90%;
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        width: 100%;
+        margin-bottom: 20px;
+        text-align: left;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 1rem;
+        color: #d1d5db;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 12px 15px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 8px;
+        color: #ffffff;
+        font-family: "Jost", sans-serif;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: rgba(255, 255, 255, 0.5);
+        background: rgba(255, 255, 255, 0.15);
+    }
+
+    .form-row {
+        display: flex;
+        gap: 15px;
+        width: 100%;
+    }
+
+    .form-row .form-group {
+        flex: 1;
+    }
+
+    .btn.primary {
+        width: 100%;
+        padding: 0.9rem 2.2rem;
+        font-size: 1.1rem;
+        background-color: #ffffff;
+        color: #000000;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        box-shadow: 0 8px 24px rgba(255, 255, 255, 0.1);
+        transition: all 0.3s ease;
+        font-family: "Jost", sans-serif;
+        margin-bottom: 15px;
+    }
+
+    .btn.primary:hover {
+        background-color: #e5e5e5;
+        transform: translateY(-2px);
+    }
+
+    .links {
+        margin-top: 15px;
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .links a {
+        color: #d1d5db;
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: color 0.3s ease;
+    }
+
+    .links a:hover {
+        color: #ffffff;
+        text-decoration: underline;
+    }
+
+    .error-message {
+        color: #ef4444;
+        margin-top: 5px;
+        font-size: 0.8rem;
+        text-align: left;
+    }
+
+    .helptext {
+        color: #a1a1aa;
+        font-size: 0.8rem;
+        margin-top: 5px;
+        display: block;
+    }
+
+    @media (max-width: 600px) {
+        h1.title {
+            font-size: clamp(2rem, 6vw, 2.5rem);
+        }
+
+        .card {
+            padding: 20px;
+        }
+
+        .btn.primary {
+            padding: 0.7rem 1.8rem;
+            font-size: 1rem;
+        }
+
+        .form-row {
+            flex-direction: column;
+            gap: 0;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="title">Face Recognition System</h1>
+    <div class="card">
+        <h2 style="margin-bottom: 20px;">Create Your Account</h2>
+
+        <form method="post" action="{{ url_for('signup') }}" enctype="multipart/form-data">
+            {{ form.hidden_tag() }} {# CSRF + hidden fields (Flask-WTF) #}
+
+            {{ form.hidden_tag() }} {# CSRF + hidden fields (Flask-WTF) #}
+
+            <div class="form-group">
+                {{ form.username.label }}
+                {{ form.username(class="form-control") }}
+                {% for error in form.username.errors %}
+                <div class="error-message">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="form-group">
+                {{ form.email.label }}
+                {{ form.email(class="form-control") }}
+                {% for error in form.email.errors %}
+                <div class="error-message">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form.phone.label }}
+                    {{ form.phone(class="form-control") }}
+                    {% for error in form.phone.errors %}
+                    <div class="error-message">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="form-group">
+                    {{ form.college.label }}
+                    {{ form.college(class="form-control") }}
+                    {% for error in form.college.errors %}
+                    <div class="error-message">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="form-group">
+                {{ form.password1.label }}
+                {{ form.password1(class="form-control") }}
+                {% for error in form.password1.errors %}
+                <div class="error-message">{{ error }}</div>
+                {% endfor %}
+                <span class="helptext">
+                    Your password must contain at least 8 characters, can't be too common,
+                    and can't be entirely numeric.
+                </span>
+            </div>
+
+            <div class="form-group">
+                {{ form.password2.label }}
+                {{ form.password2(class="form-control") }}
+                {% for error in form.password2.errors %}
+                <div class="error-message">{{ error }}</div>
+                {% endfor %}
+                <span class="helptext">Enter the same password again for verification.</span>
+            </div>
+
+            <div class="form-group">
+                {{ form.profile_pic.label }}
+                {{ form.profile_pic() }}
+                {% for error in form.profile_pic.errors %}
+                <div class="error-message">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <button type="submit" class="btn primary">Create Account</button>
+
+            {% if form.errors %}
+            <div class="error-message">
+                Please fix the errors above and try again.
+            </div>
+            {% endif %}
+        </form>
+
+        <div class="links">
+            <a href="{{ url_for('login') }}">Already have an account? Login here</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

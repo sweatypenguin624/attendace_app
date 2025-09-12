@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+
+{% block title %}Face Recognition System{% endblock %}
+
+{% block extra_css %}
+<style>
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        justify-content: center;
+        flex: 1;
+    }
+
+    h1.title {
+        font-size: 3.5rem;
+        font-weight: 600;
+        margin-bottom: 20px;
+        letter-spacing: 1px;
+        background: linear-gradient(to right, #6b7280, #d1d5db);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    .card {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        max-width: 500px;
+        width: 90%;
+    }
+
+    video#video {
+        width: 100%;
+        max-width: 400px;
+        height: auto;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        border: 2px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .buttons {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .btn.primary,
+    .btn.secondary {
+        padding: 0.9rem 2.2rem;
+        font-size: 1.1rem;
+        background-color: #ffffff;
+        color: #000000;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        box-shadow: 0 8px 24px rgba(255, 255, 255, 0.1);
+        transition: all 0.3s ease;
+        font-family: "Jost", sans-serif;
+    }
+
+    .btn.primary:hover,
+    .btn.secondary:hover {
+        background-color: #e5e5e5;
+        transform: translateY(-2px);
+    }
+
+    .btn.secondary {
+        background-color: #d1d5db;
+        color: #000000;
+    }
+
+    .btn-secondary:hover {
+        background-color: #b3b3b3;
+    }
+
+    #result {
+        margin-top: 20px;
+        font-size: 1rem;
+        color: #22c55e;
+        min-height: 24px;
+    }
+
+    #result.error {
+        color: #ef4444;
+    }
+
+    @media (max-width: 600px) {
+        h1.title {
+            font-size: clamp(2rem, 6vw, 2.5rem);
+        }
+
+        .card {
+            padding: 15px;
+        }
+
+        video#video {
+            max-width: 100%;
+        }
+
+        .btn.primary,
+        .btn.secondary {
+            padding: 0.7rem 1.8rem;
+            font-size: 1rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="title">Face Recognition System</h1>
+    <div class="card">
+        <video id="video" autoplay></video>
+        <div class="buttons">
+            <button id="capture-btn" class="btn primary">Scan Face</button>
+        </div>
+        <div id="result" class="result"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const video = document.getElementById('video');
+        const captureBtn = document.getElementById('capture-btn');
+        const resultDiv = document.getElementById('result');
+
+        let backendUrl = null;
+
+        // Fetch backend URL dynamically
+        fetch("static/ngrok_url.json")
+            .then(resp => resp.json())
+            .then(data => { backendUrl = data.backend_url; })
+            .catch(err => {
+                console.error("Failed to fetch backend URL:", err);
+                resultDiv.textContent = "Backend URL not available";
+                resultDiv.classList.add("error");
+            });
+
+        // Access webcam
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                video.srcObject = stream;
+                video.play();
+            })
+            .catch(err => {
+                resultDiv.textContent = "Error accessing camera: " + err;
+                resultDiv.classList.add("error");
+            });
+
+        captureBtn.addEventListener('click', async () => {
+            if (!backendUrl) {
+                resultDiv.textContent = "Backend URL not loaded yet";
+                resultDiv.classList.add("error");
+                return;
+            }
+
+            // Capture frame from video
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            // Convert canvas to Blob and send as FormData
+            canvas.toBlob(async (blob) => {
+                const formData = new FormData();
+                formData.append("frame", blob, "snapshot.jpg");
+
+                try {
+                    const res = await fetch(`${backendUrl}/api/recognize`, {
+                        method: "POST",
+                        body: formData
+                    });
+
+                    const data = await res.json();
+
+                    if (data.success) {
+                        resultDiv.textContent = data.message;
+                        resultDiv.classList.remove("error");
+                    } else {
+                        resultDiv.textContent = data.message;
+                        resultDiv.classList.add("error");
+                    }
+                } catch (err) {
+                    resultDiv.textContent = "Error: " + err;
+                    resultDiv.classList.add("error");
+                }
+            }, "image/jpeg");
+        });
+    });
+</script>
+{% endblock %}
