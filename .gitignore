@@ -4,3 +4,4 @@ static/uploads
 __pycache__/
 *.pyc
 instance/   
+ngrok.yml
