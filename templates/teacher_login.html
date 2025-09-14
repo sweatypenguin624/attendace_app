@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Teacher Login - Face Recognition System{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* (keep all your CSS unchanged) */
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <div class="teacher-header">
+        <div class="teacher-icon">👨‍🏫</div>
+        <h1 class="title">Teacher Portal</h1>
+        <p class="teacher-subtitle">Access your dashboard to manage classes, view attendance reports, and track student
+            progress</p>
+    </div>
+
+    <div class="card">
+        <h2 style="margin-bottom: 20px;">Teacher Login</h2>
+
+        <form method="post" action="{{ url_for('teacher_login') }}">
+            {# If you’re using Flask-WTF, include this: {{ form.hidden_tag() }} #}
+
+            <div class="form-group">
+                <label for="username">Email or Username</label>
+                <input type="text" id="username" name="username" required autocomplete="username">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required autocomplete="current-password">
+            </div>
+
+            <button type="submit" class="btn primary">Login as Teacher</button>
+
+            {% if error %}
+            <div class="error-message">
+                {{ error }}
+            </div>
+            {% endif %}
+        </form>
+
+        <div class="links">
+            <a href="{{ url_for('login') }}">Student Login</a>
+            <a href="{{ url_for('password_reset') }}">Forgot Password?</a>
+        </div>
+    </div>
+
+    <div class="teacher-features">
+        <div class="feature">
+            <div class="feature-icon">📊</div>
+            <h3 class="feature-title">Attendance Reports</h3>
+            <p class="feature-desc">Generate detailed attendance reports for your classes</p>
+        </div>
+        <div class="feature">
+            <div class="feature-icon">👥</div>
+            <h3 class="feature-title">Class Management</h3>
+            <p class="feature-desc">Manage multiple classes and student groups</p>
+        </div>
+        <div class="feature">
+            <div class="feature-icon">📅</div>
+            <h3 class="feature-title">Schedule Tracking</h3>
+            <p class="feature-desc">Track attendance patterns and identify trends</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
